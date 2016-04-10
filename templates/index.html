@@ -6,32 +6,21 @@
 </head>
 <body>
 	<h1>Fun With Forms</h1>
-	<form action="/" method="post">
+	<form action="/admin" method="post">
+		<input type="hidden" name="action" value="add_channel">
 		<fieldset>
-			<legend>Username</legend>
-			<input type="text" name="user-name">
+			<legend>Channel Name</legend>
+			<input type="text" name="channel-name">
 		</fieldset>
 		<fieldset>
-			<legend>Message</legend>
-			<input type="text" name="message">
-		</fieldset>
-		<fieldset>
-			<legend>Save Message</legend>
-			<input type="submit" value="Save">
+			<legend>Add Channel</legend>
+			<input type="submit" value="Add">
 		</fieldset>
 	</form>
-	{% if form_content %}
+	{% if message %}
 	<section>
-		<dl>
-		{% for key, value in form_content.iteritems() %}
-			<dt>
-				{{ key|e }}
-			</dt>
-			<dd>
-				{{ value|e }}
-			</dd>
-		{% endfor %}
-		</dl>
+		<h3>Result</h3>
+		<p>{{ message }}</p>
 	</section>
 	{% endif %}
 </body>
