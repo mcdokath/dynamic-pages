@@ -18,7 +18,11 @@ class DynamicPage(webapp2.RequestHandler):
 		self.template_values = {}
 		
 	def get(self):
-		self.render('index.html')
+		self.template_variables['profile_contents'] = {}
+		template = JINJA_ENVIRONMENT.get_template('index.html')
+		for i in self.request.arguments():
+			self.template_variables['profile_contents'][i] = self.request.get(i)
+		self.render('index.html', self.template_variables)
 	
 	def post(self):
 		self.template_variables['profile_contents'] = {}
@@ -30,14 +34,16 @@ class DynamicPage(webapp2.RequestHandler):
 		if action == 'add_profile':
 			k = ndb.Key(db_defs.Profile, self.app.config.get('default-group'))
 			prof = db_defs.Profile(parent=k)
-			prof.username = self.request.get('username')
+			prof.email = self.request.get('email')
 			prof.firstname = self.request.get('first-name')
 			prof.lastname = self.request.get('last-name')
 			prof.gender = self.request.get('gender')
 			prof.age = int(self.request.get('age'))
+			if self.request.get('agreement') == u'on':
+				prof.agreement = True
 			prof.edinterests = [ndb.Key(urlsafe=x) for x in self.request.get_all('edinterests[]')]
 			prof.put()
-			self.template_values['message'] = 'Added profile ' + prof.username + ' to the database.'
+			self.template_values['message'] = 'Added profile ' + prof.email + ' to the database.'
 		elif action == 'add_interest':
 			k = ndb.Key(db_defs.EdInterests, self.app.config.get('default-group'))
 			ai = db_defs.EdInterests(parent=k)
@@ -46,11 +52,11 @@ class DynamicPage(webapp2.RequestHandler):
 			self.template_values['message'] = 'Added interest ' + ai.name + ' to the database.'
 		else:
 			self.template_values['message'] = 'Action ' + action + ' is unknown.'
-		self.template_values['username'] = db_defs.Profile.query(ancestor=ndb.Key(db_defs.Profile, self.app.config.get('default-group')))
+		self.template_values['email'] = db_defs.Profile.query(ancestor=ndb.Key(db_defs.Profile, self.app.config.get('default-group')))
 		self.render('index.html', self.template_variables)
 		
 	def render(self, page, template_values={}):
-		self.template_values['username'] = [{'username':x.username,'key':x.key.urlsafe()} for x in db_defs.Profile.query(ancestor=ndb.Key(db_defs.Profile, self.app.config.get('default-group'))).fetch()]
+		self.template_values['email'] = [{'email':x.email,'key':x.key.urlsafe()} for x in db_defs.Profile.query(ancestor=ndb.Key(db_defs.Profile, self.app.config.get('default-group'))).fetch()]
 		self.template_values['firstname'] = [{'firstname':x.firstname,'key':x.key.urlsafe()} for x in db_defs.Profile.query(ancestor=ndb.Key(db_defs.Profile, self.app.config.get('default-group'))).fetch()]
 		self.template_values['lastname'] = [{'lastname':x.lastname,'key':x.key.urlsafe()} for x in db_defs.Profile.query(ancestor=ndb.Key(db_defs.Profile, self.app.config.get('default-group'))).fetch()]
 		self.template_values['gender'] = [{'gender':x.gender,'key':x.key.urlsafe()} for x in db_defs.Profile.query(ancestor=ndb.Key(db_defs.Profile, self.app.config.get('default-group'))).fetch()]

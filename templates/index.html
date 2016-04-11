@@ -13,7 +13,7 @@
 		<input type="hidden" name="action" value="add_profile">
 		<fieldset>
 			<legend>Add Profile</legend>
-			<strong>Username:</strong> <input type="text" name="username" required="true"><br />
+			<strong>Email:</strong> <input type="email" name="email" required="true"><br />
 			<strong>First Name:</strong> <input type="text" name="first-name" required="true"><br />
 			<strong>Last Name:</strong> <input type="text" name="last-name" required="true"><br />
 			<strong>Gender:</strong><br />
@@ -21,12 +21,7 @@
 			<input type="radio" name="gender" id="gender-female" value="female" /> <label for="genderFemale">Female</label><br />
 			<input type="radio" name="gender" id="gender-other" value="other" /> <label for="genderOther">Other</label><br />
 			<strong>Age:</strong> <input type="number" name="age" required="true"><br />
-			<fieldset>
-				<legend>Academic Interests</legend>
-				{% for ai in edinterests %}
-				<label> {{ ai.name }} </label><input type="checkbox" name="edinterests[]" value="{{ ai.key }}">
-				{% endfor %}
-			</fieldset>
+			<input type="checkbox" name="agreement" required="true">By checking this box, you agree that you are 13 years of age or older and agree to the Terms of Use for the site.<br />
 			<input type="submit" value="Submit" class="submit_button">
 			<input type="reset" value="Clear All" class="submit_button">
 		</fieldset>
@@ -39,12 +34,22 @@
 			<input type="text" name="interest-name" required="true">
 			<input type="submit" value="Add" class="submit_button">
 		</fieldset>
-	</for,>
+	</form>
 	<section>
-		<h2>Edit Profiles</h2>
-		{% for prof in profile_contents %}
-		<a href="/edit?key={{ prof.key }}&type=profile">{{ prof.username }}</a>
+		<h2>Academic Interests</h2>
+			<div id="interests">
+			{% for ai in edinterests %}
+			| {{ ai.name }} | 
+			{% endfor %}
+			</div>
+	</section>
+	<section>
+		<h2>View Profiles</h2>
+		<div id="profiles">
+		{% for name in email %}
+		<a href="/edit?key={{ name.key }}&type=profile">{{ name.email }}</a>
 		{% endfor %}
+		</div>
 	</section>
 	{% if message %}
 	<section>
