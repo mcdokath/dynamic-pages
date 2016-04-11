@@ -1,14 +1,15 @@
 from google.appengine.ext import ndb
 
 class Message(ndb.Model):
-	channel = ndb.StringProperty(required=True)
-	date_time = ndb.DateTimeProperty(required=True)
-	count = ndb.IntegerProperty(required=True)
+	message = ndb.StringProperty(required=True)
 
-class Channel(ndb.Model):
-	name = ndb.StringProperty(required=True)
-	classes = ndb.StringProperty(repeated=True)
-	active = ndb.BooleanProperty(required=True)
+class Profile(ndb.Model):
+	username = ndb.StringProperty(required=True)
+	firstname = ndb.StringProperty(required=True)
+	lastname = ndb.StringProperty(required=True)
+	gender = ndb.StringProperty(required=True)
+	age = ndb.IntegerProperty(required=True)
 
-class ChannelClass(ndb.Model):
+class EdInterests(ndb.Model):
 	name = ndb.StringProperty(required=True)
+	interests = ndb.StringProperty(repeated=True)
