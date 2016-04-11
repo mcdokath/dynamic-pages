@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type="text/css" href="/templates/css/main.css">
+	<title>Acamedia</title>
+</head>
+<body>
+	<div id="container">
+		<h1>View Profiles</h1>
+		<div id="profile-view">
+		{% for prof in profile %}
+		<strong>Email:</strong> {{ prof.email }}<br />
+		First Name: {{ prof.firstname }}<br />
+		Last Name: {{ prof.lastname }}<br />
+		Gender: {{ prof.gender }}<br />
+		Age: {{ prof.age }}<br />
+		</p>
+		{% endfor %}
+		</div>
+	</div>
+</body>
+</html>
