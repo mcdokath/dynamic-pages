@@ -9,6 +9,7 @@ class Profile(ndb.Model):
 	lastname = ndb.StringProperty(required=True)
 	gender = ndb.StringProperty(required=True)
 	age = ndb.IntegerProperty(required=True)
+	edinterests = ndb.StringProperty(repeated=True)
 
 class EdInterests(ndb.Model):
 	name = ndb.StringProperty(required=True)
