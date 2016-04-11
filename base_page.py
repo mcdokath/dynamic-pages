@@ -10,7 +10,9 @@ JINJA_ENVIRONMENT = jinja2.Environment(
   autoescape=True
   )
 
-class DynamicPage(webapp2.RequestHandler):	
+class DynamicPage(webapp2.RequestHandler):
+	template_variables = {}
+	
 	def __init__(self, request, response):
 		self.initialize(request, response)
 		self.template_values = {}
@@ -19,10 +21,10 @@ class DynamicPage(webapp2.RequestHandler):
 		self.render('index.html')
 	
 	def post(self):
-		self.template_values['profile_contents'] = {}
+		self.template_variables['profile_contents'] = {}
 		template = JINJA_ENVIRONMENT.get_template('index.html')
 		for i in self.request.arguments():
-			self.template_values['profile_contents'][i] = self.request.get(i)
+			self.template_variables['profile_contents'][i] = self.request.get(i)
 			
 		action = self.request.get('action')
 		if action == 'add_profile':
@@ -45,7 +47,7 @@ class DynamicPage(webapp2.RequestHandler):
 		else:
 			self.template_values['message'] = 'Action ' + action + ' is unknown.'
 		self.template_values['username'] = db_defs.Profile.query(ancestor=ndb.Key(db_defs.Profile, self.app.config.get('default-group')))
-		self.render('index.html')
+		self.render('index.html', self.template_variables)
 		
 	def render(self, page, template_values={}):
 		self.template_values['username'] = [{'username':x.username,'key':x.key.urlsafe()} for x in db_defs.Profile.query(ancestor=ndb.Key(db_defs.Profile, self.app.config.get('default-group'))).fetch()]
@@ -56,4 +58,4 @@ class DynamicPage(webapp2.RequestHandler):
 		self.template_values['edinterests'] = [{'name':x.name,'key':x.key.urlsafe()} for x in db_defs.EdInterests.query(ancestor=ndb.Key(db_defs.EdInterests, self.app.config.get('default-group'))).fetch()]
 
 		template = JINJA_ENVIRONMENT.get_template('index.html')
-		self.response.write(template.render(template_values))
+		self.response.write(template.render(self.template_values))
